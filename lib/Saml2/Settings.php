@@ -888,6 +888,7 @@ class OneLogin_Saml2_Settings
      *   or $advancedSettings['security']['wantAssertionsEncrypted'] are enabled.
      * @param DateTime|null $validUntil    Metadata's valid time
      * @param int|null      $cacheDuration Duration of the cache in seconds
+     * @param bool          $ignoreValidUntil exclude the validUntil tag from metadata
      *
      * @return string  SP metadata (xml)
      *
@@ -896,7 +897,7 @@ class OneLogin_Saml2_Settings
      */
     public function getSPMetadata($alwaysPublishEncryptionCert = false, $validUntil = null, $cacheDuration = null)
     {
-        $metadata = OneLogin_Saml2_Metadata::builder($this->_sp, $this->_security['authnRequestsSigned'], $this->_security['wantAssertionsSigned'], $validUntil, $cacheDuration, $this->getContacts(), $this->getOrganization());
+        $metadata = OneLogin_Saml2_Metadata::builder($this->_sp, $this->_security['authnRequestsSigned'], $this->_security['wantAssertionsSigned'], $validUntil, $cacheDuration, $this->getContacts(), $this->getOrganization(), [], $ignoreValidUntil);
 
         $certNew = $this->getSPcertNew();
         if (!empty($certNew)) {
