@@ -548,6 +548,47 @@ class OneLogin_Saml2_UtilsTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers OneLogin_Saml2_Utils::setBaseURL
+     */
+    public function testSetBaseURL2()
+    {
+        $_SERVER['HTTP_HOST'] = 'sp.example.com';
+        $_SERVER['HTTPS'] = 'https';
+        $_SERVER['REQUEST_URI'] = null;
+        $_SERVER['QUERY_STRING'] = null;
+        $_SERVER['SCRIPT_NAME'] = '/';
+        unset($_SERVER['PATH_INFO']);
+
+        OneLogin_Saml2_Utils::setBaseURL('https://sp.example.com');
+        $this->assertEquals("https://sp.example.com/", OneLogin_Saml2_Utils::getSelfURLNoQuery());
+        $this->assertEquals("https://sp.example.com/", OneLogin_Saml2_Utils::getSelfRoutedURLNoQuery());
+        $this->assertEquals("https://sp.example.com/", OneLogin_Saml2_Utils::getSelfURL());
+        $this->assertEquals('/', OneLogin_Saml2_Utils::getBaseURLPath());
+
+        $_SERVER['REQUEST_URI'] = '/example1/path/route.php?x=test';
+        $_SERVER['QUERY_STRING'] = '?x=test';
+        $_SERVER['SCRIPT_NAME'] = '/example1/path/route.php';
+        $this->assertEquals("https://sp.example.com/example1/path/route.php", OneLogin_Saml2_Utils::getSelfURLNoQuery());
+        $this->assertEquals("https://sp.example.com/example1/path/route.php", OneLogin_Saml2_Utils::getSelfRoutedURLNoQuery());
+        $this->assertEquals("https://sp.example.com/example1/path/route.php?x=test", OneLogin_Saml2_Utils::getSelfURL());
+        $this->assertEquals('/', OneLogin_Saml2_Utils::getBaseURLPath());
+
+        OneLogin_Saml2_Utils::setBaseURLPath('/example1/path/');
+        $this->assertEquals("https://sp.example.com/example1/path/route.php", OneLogin_Saml2_Utils::getSelfURLNoQuery());
+        $this->assertEquals("https://sp.example.com/example1/path/route.php", OneLogin_Saml2_Utils::getSelfRoutedURLNoQuery());
+        $this->assertEquals("https://sp.example.com/example1/path/route.php?x=test", OneLogin_Saml2_Utils::getSelfURL());
+        $this->assertEquals('/example1/path/', OneLogin_Saml2_Utils::getBaseURLPath());
+
+        $_SERVER['REQUEST_URI'] = '/example1/path/route/?x=test';
+        $_SERVER['QUERY_STRING'] = '?x=test';
+        $_SERVER['SCRIPT_NAME'] = '/example1/path/route';
+        $this->assertEquals("https://sp.example.com/example1/path/route", OneLogin_Saml2_Utils::getSelfURLNoQuery());
+        $this->assertEquals("https://sp.example.com/example1/path/route", OneLogin_Saml2_Utils::getSelfRoutedURLNoQuery());
+        $this->assertEquals("https://sp.example.com/example1/path/route/?x=test", OneLogin_Saml2_Utils::getSelfURL());
+        $this->assertEquals('/example1/path/', OneLogin_Saml2_Utils::getBaseURLPath());
+    }
+
+    /**
     * Tests the getSelfURLhost method of the OneLogin_Saml2_Utils
     *
     * @covers OneLogin_Saml2_Utils::getSelfURLhost
