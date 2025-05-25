@@ -1521,7 +1521,7 @@ class OneLogin_Saml2_Utils
                     OneLogin_Saml2_Error::INVALID_PARAMETER
                 );
             }
-            $keys = ["SAMLRequest", "SAMLResponse", "RelayState", "SigAlg", "Signature"];
+            $keys = array("SAMLRequest", "SAMLResponse", "RelayState", "SigAlg", "Signature");
             foreach ($keys as $key) {
                 if (substr_count($_SERVER['QUERY_STRING'], $key) > 1) {
                     throw new OneLogin_Saml2_Error(
@@ -1544,7 +1544,7 @@ class OneLogin_Saml2_Utils
             $signedQuery .= '&SigAlg='.OneLogin_Saml2_Utils::extractOriginalQueryParam('SigAlg');
         } else {
             if (isset($getData['SAMLRequest']) && isset($getData['SAMLResponse'])) {
-                throw new Error(
+                throw new OneLogin_Saml2_Error(
                     "Both SAMLRequest and SAMLResponse provided",
                     OneLogin_Saml2_Error::INVALID_PARAMETER
                 );
