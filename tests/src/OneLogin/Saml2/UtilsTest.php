@@ -545,6 +545,48 @@ class UtilsTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedUrl2, Utils::getSelfURL());
     }
 
+   /**
+     * @covers OneLogin\Saml2\Utils::setBaseURL
+     */
+    public function testSetBaseURL2()
+    {
+        $_SERVER['HTTP_HOST'] = 'sp.example.com';
+        $_SERVER['HTTPS'] = 'https';
+        $_SERVER['REQUEST_URI'] = null;
+        $_SERVER['QUERY_STRING'] = null;
+        $_SERVER['SCRIPT_NAME'] = '/';
+        unset($_SERVER['PATH_INFO']);
+
+        Utils::setBaseURL('https://sp.example.com');
+        $this->assertEquals("https://sp.example.com/", Utils::getSelfURLNoQuery());
+        $this->assertEquals("https://sp.example.com/", Utils::getSelfRoutedURLNoQuery());
+        $this->assertEquals("https://sp.example.com/", Utils::getSelfURL());
+        $this->assertEquals('/', Utils::getBaseURLPath());
+
+        $_SERVER['REQUEST_URI'] = '/example1/path/route.php?x=test';
+        $_SERVER['QUERY_STRING'] = '?x=test';
+        $_SERVER['SCRIPT_NAME'] = '/example1/path/route.php';
+        $this->assertEquals("https://sp.example.com/example1/path/route.php", Utils::getSelfURLNoQuery());
+        $this->assertEquals("https://sp.example.com/example1/path/route.php", Utils::getSelfRoutedURLNoQuery());
+        $this->assertEquals("https://sp.example.com/example1/path/route.php?x=test", Utils::getSelfURL());
+        $this->assertEquals('/', Utils::getBaseURLPath());
+
+        Utils::setBaseURLPath('/example1/path/');
+        $this->assertEquals("https://sp.example.com/example1/path/route.php", Utils::getSelfURLNoQuery());
+        $this->assertEquals("https://sp.example.com/example1/path/route.php", Utils::getSelfRoutedURLNoQuery());
+        $this->assertEquals("https://sp.example.com/example1/path/route.php?x=test", Utils::getSelfURL());
+        $this->assertEquals('/example1/path/', Utils::getBaseURLPath());
+
+        $_SERVER['REQUEST_URI'] = '/example1/path/route/?x=test';
+        $_SERVER['QUERY_STRING'] = '?x=test';
+        $_SERVER['SCRIPT_NAME'] = '/example1/path/route';
+        $this->assertEquals("https://sp.example.com/example1/path/route", Utils::getSelfURLNoQuery());
+        $this->assertEquals("https://sp.example.com/example1/path/route", Utils::getSelfRoutedURLNoQuery());
+        $this->assertEquals("https://sp.example.com/example1/path/route/?x=test", Utils::getSelfURL());
+        $this->assertEquals('/example1/path/', Utils::getBaseURLPath());
+
+    }
+
     /**
      * Tests the getSelfURLhost method of the Utils
      *
