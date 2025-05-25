@@ -1,6 +1,13 @@
 CHANGELOG
 =========
 
+v.2.21.0
+* [#619](https://github.com/SAML-Toolkits/php-saml/pull/619) Add Parameter checking on validateBinarySign, inspired on CVE-2025-27773
+* [#603](https://github.com/SAML-Toolkits/php-saml/issues/603) Fix typo in ignoreValidUntil that breaks metadata. Add parameter to exclude validUntil on Settings getSPMetadata
+* [#594](https://github.com/SAML-Toolkits/php-saml/pull/594) Add support for encrypted name id in encrypted assertion
+* Fix buildWithBaseURLPath
+* Doc fix typo
+* Remove Travis CI references
 
 v.2.20.0
 * [#586](https://github.com/SAML-Toolkits/php-saml/pull/586) IdPMetadataParser::parseRemoteXML - Add argument for setting whether to validate peer SSL certificate
