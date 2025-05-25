@@ -743,6 +743,10 @@ class Utils
      */
     public static function extractOriginalQueryParam($name)
     {
+        if (!isset($_SERVER['QUERY_STRING']) || empty($_SERVER['QUERY_STRING'])) {
+            return '';
+        }
+
         $index = strpos($_SERVER['QUERY_STRING'], $name.'=');
         $substring = substr($_SERVER['QUERY_STRING'], $index + strlen($name) + 1);
         $end = strpos($substring, '&');
@@ -1541,13 +1545,43 @@ class Utils
             $signAlg = $getData['SigAlg'];
         }
 
+
         if ($retrieveParametersFromServer) {
+            if (!isset($_SERVER['QUERY_STRING']) || empty($_SERVER['QUERY_STRING'])) {
+                throw new Error(
+                    "No query string provided",
+                    Error::INVALID_PARAMETER
+                );
+            }
+            $keys = ["SAMLRequest", "SAMLResponse", "RelayState", "SigAlg", "Signature"];
+            foreach ($keys as $key) {
+                if (substr_count($_SERVER['QUERY_STRING'], $key) > 1) {
+                    throw new Error(
+                        "Duplicate parameter in query string",
+                        Error::INVALID_PARAMETER
+                    );
+                }
+            }
+            if (substr_count($_SERVER['QUERY_STRING'], "SAMLRequest") > 0 && substr_count($_SERVER['QUERY_STRING'], "SAMLResponse") > 0) {
+                throw new Error(
+                    "Both SAMLRequest and SAMLResponse provided",
+                    Error::INVALID_PARAMETER
+                );
+            }
+
             $signedQuery = $messageType.'='.Utils::extractOriginalQueryParam($messageType);
             if (isset($getData['RelayState'])) {
                 $signedQuery .= '&RelayState='.Utils::extractOriginalQueryParam('RelayState');
             }
             $signedQuery .= '&SigAlg='.Utils::extractOriginalQueryParam('SigAlg');
         } else {
+            if (isset($getData['SAMLRequest']) && isset($getData['SAMLResponse'])) {
+                throw new Error(
+                    "Both SAMLRequest and SAMLResponse provided",
+                    Error::INVALID_PARAMETER
+                );
+            }
+
             $signedQuery = $messageType.'='.urlencode($getData[$messageType]);
             if (isset($getData['RelayState'])) {
                 $signedQuery .= '&RelayState='.urlencode($getData['RelayState']);
