@@ -709,8 +709,12 @@ class OneLogin_Saml2_Utils
         if (!empty($baseURLPath)) {
             $result = $baseURLPath;
             if (!empty($info)) {
-                // Remove base path from the path info.
-                $extractedInfo = str_replace($baseURLPath, '', $info);
+                $extractedInfo = $info;
+                if ($baseURLPath != '/') {
+                    // Remove base path from the path info.
+                    $extractedInfo = str_replace($baseURLPath, '', $info);
+                }
+
                 // Remove starting and ending slash.
                 $extractedInfo = trim($extractedInfo, '/');
                 if (!empty($extractedInfo)) {
