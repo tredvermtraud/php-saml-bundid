@@ -1,9 +1,9 @@
 <?php
 
-namespace OneLogin\Saml2\Tests;
+namespace Ermtraud\Saml2\Tests;
 
-use OneLogin\Saml2\Constants;
-use OneLogin\Saml2\IdPMetadataParser;
+use Ermtraud\Saml2\Constants;
+use Ermtraud\Saml2\IdPMetadataParser;
 
 /**
  * Unit tests for IdPMetadataParser class

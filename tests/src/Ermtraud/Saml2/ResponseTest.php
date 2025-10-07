@@ -1,11 +1,11 @@
 <?php
 
-namespace OneLogin\Saml2\Tests;
+namespace Ermtraud\Saml2\Tests;
 
-use OneLogin\Saml2\Response;
-use OneLogin\Saml2\Settings;
-use OneLogin\Saml2\Utils;
-use OneLogin\Saml2\ValidationError;
+use Ermtraud\Saml2\Response;
+use Ermtraud\Saml2\Settings;
+use Ermtraud\Saml2\Utils;
+use Ermtraud\Saml2\ValidationError;
 
 use DOMDocument;
 use Exception;

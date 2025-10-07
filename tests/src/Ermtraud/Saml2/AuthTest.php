@@ -1,13 +1,13 @@
 <?php
 
-namespace OneLogin\Saml2\Tests;
+namespace Ermtraud\Saml2\Tests;
 
-use OneLogin\Saml2\Auth;
-use OneLogin\Saml2\Error;
-use OneLogin\Saml2\LogoutRequest;
-use OneLogin\Saml2\Settings;
-use OneLogin\Saml2\Utils;
-use OneLogin\Saml2\ValidationError;
+use Ermtraud\Saml2\Auth;
+use Ermtraud\Saml2\Error;
+use Ermtraud\Saml2\LogoutRequest;
+use Ermtraud\Saml2\Settings;
+use Ermtraud\Saml2\Utils;
+use Ermtraud\Saml2\ValidationError;
 
 use RobRichards\XMLSecLibs\XMLSecurityKey;
 
@@ -938,6 +938,7 @@ class AuthTest extends \PHPUnit\Framework\TestCase
     $settingsDir = TEST_ROOT . '/settings/';
     include $settingsDir . 'settings1.php';
 
+    /** @var array<mixed> $settingsInfo */
     $settingsInfo['security']['authnRequestsSigned'] = true;
 
     $auth = new Auth($settingsInfo);
@@ -967,7 +968,7 @@ class AuthTest extends \PHPUnit\Framework\TestCase
   {
     $settingsDir = TEST_ROOT . '/settings/';
     include $settingsDir . 'settings1.php';
-
+    /** @var array<mixed> $settingsInfo */
     $settingsInfo['security']['authnRequestsSigned'] = true;
 
     $auth = new Auth($settingsInfo);
@@ -1024,6 +1025,7 @@ class AuthTest extends \PHPUnit\Framework\TestCase
     $settingsDir = TEST_ROOT . '/settings/';
     include $settingsDir . 'settings1.php';
 
+    /** @var array<mixed> $settingsInfo */
     $settingsInfo['security']['authnRequestsSigned'] = true;
 
     $auth = new Auth($settingsInfo);
@@ -1309,6 +1311,7 @@ class AuthTest extends \PHPUnit\Framework\TestCase
     $settingsDir = TEST_ROOT . '/settings/';
     include $settingsDir . 'settings1.php';
 
+    /** @var array<mixed> $settingsInfo */
     $settingsInfo['security']['logoutRequestSigned'] = true;
 
     $auth = new Auth($settingsInfo);

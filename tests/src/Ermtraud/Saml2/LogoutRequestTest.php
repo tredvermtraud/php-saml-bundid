@@ -1,13 +1,13 @@
 <?php
 
-namespace OneLogin\Saml2\Tests;
+namespace Ermtraud\Saml2\Tests;
 
-use OneLogin\Saml2\Constants;
-use OneLogin\Saml2\Error;
-use OneLogin\Saml2\LogoutRequest;
-use OneLogin\Saml2\Settings;
-use OneLogin\Saml2\Utils;
-use OneLogin\Saml2\ValidationError;
+use Ermtraud\Saml2\Constants;
+use Ermtraud\Saml2\Error;
+use Ermtraud\Saml2\LogoutRequest;
+use Ermtraud\Saml2\Settings;
+use Ermtraud\Saml2\Utils;
+use Ermtraud\Saml2\ValidationError;
 
 use DomDocument;
 

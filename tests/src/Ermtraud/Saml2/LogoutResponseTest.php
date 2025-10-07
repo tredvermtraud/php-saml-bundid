@@ -1,12 +1,12 @@
 <?php
 
-namespace OneLogin\Saml2\Tests;
+namespace Ermtraud\Saml2\Tests;
 
-use OneLogin\Saml2\Error;
-use OneLogin\Saml2\Utils;
-use OneLogin\Saml2\Settings;
-use OneLogin\Saml2\Constants;
-use OneLogin\Saml2\LogoutResponse;
+use Ermtraud\Saml2\Error;
+use Ermtraud\Saml2\Utils;
+use Ermtraud\Saml2\Settings;
+use Ermtraud\Saml2\Constants;
+use Ermtraud\Saml2\LogoutResponse;
 
 use DomDocument;
 

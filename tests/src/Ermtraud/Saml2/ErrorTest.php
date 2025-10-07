@@ -1,8 +1,8 @@
 <?php
 
-namespace OneLogin\Saml2\Tests;
+namespace Ermtraud\Saml2\Tests;
 
-use OneLogin\Saml2\Error;
+use Ermtraud\Saml2\Error;
 
 /**
  * Unit tests for Error class

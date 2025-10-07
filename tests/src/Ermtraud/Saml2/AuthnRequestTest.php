@@ -1,10 +1,10 @@
 <?php
 
-namespace OneLogin\Saml2\Tests;
+namespace Ermtraud\Saml2\Tests;
 
-use OneLogin\Saml2\AuthnRequest;
-use OneLogin\Saml2\Settings;
-use OneLogin\Saml2\Utils;
+use Ermtraud\Saml2\AuthnRequest;
+use Ermtraud\Saml2\Settings;
+use Ermtraud\Saml2\Utils;
 
 /**
  * Unit tests for AuthN Request

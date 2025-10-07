@@ -1,9 +1,9 @@
 <?php
 
-namespace OneLogin\Saml2\Tests;
+namespace Ermtraud\Saml2\Tests;
 
-use OneLogin\Saml2\Response;
-use OneLogin\Saml2\Settings;
+use Ermtraud\Saml2\Response;
+use Ermtraud\Saml2\Settings;
 
 /**
  * Unit tests for Response messages signed
