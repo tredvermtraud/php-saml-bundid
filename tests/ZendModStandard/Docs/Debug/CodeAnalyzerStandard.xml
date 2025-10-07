@@ -1,11 +1,11 @@
 <documentation title="Zend Code Analyzer">
-    <standard>
+  <standard>
     <![CDATA[
     PHP Code should pass the zend code analyzer.
     ]]>
     </standard>
-    <code_comparison>
-        <code title="Valid: Valid PHP Code.">
+  <code_comparison>
+    <code title="Valid: Valid PHP Code.">
         <![CDATA[
 function foo($bar, $baz)
 {
@@ -13,7 +13,7 @@ function foo($bar, $baz)
 }
         ]]>
         </code>
-        <code title="Invalid: There is an unused function parameter.">
+    <code title="Invalid: There is an unused function parameter.">
         <![CDATA[
 function foo($bar, $baz)
 {
@@ -21,5 +21,5 @@ function foo($bar, $baz)
 }
         ]]>
         </code>
-    </code_comparison>
+  </code_comparison>
 </documentation>

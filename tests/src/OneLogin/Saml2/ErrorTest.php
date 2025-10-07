@@ -9,15 +9,15 @@ use OneLogin\Saml2\Error;
  */
 class ErrorTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * Tests the OneLogin\Saml2\Error Constructor. 
-     * The creation of a deflated SAML Request
-     *
-     * @covers OneLogin\Saml2\Error
-     */
-    public function testError()
-    {
-        $samlException = new Error('test');
-        $this->assertEquals('test', $samlException->getMessage());
-    }
+  /**
+   * Tests the OneLogin\Saml2\Error Constructor. 
+   * The creation of a deflated SAML Request
+   *
+   * @covers OneLogin\Saml2\Error
+   */
+  public function testError()
+  {
+    $samlException = new Error('test');
+    $this->assertEquals('test', $samlException->getMessage());
+  }
 }
