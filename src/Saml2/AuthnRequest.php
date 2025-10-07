@@ -89,11 +89,7 @@ NAMEIDPOLICY;
     $organizationData = $settings->getOrganization();
     if(!empty($organizationData)) {
       $langs = array_keys($organizationData);
-      if(in_array('en-US', $langs)) {
-        $lang = 'en-US';
-      } else {
-        $lang = $langs[0];
-      }
+      $lang = (in_array('en-US', $langs)) ? 'en-US' : $langs[0];
       if(isset($organizationData[$lang]['displayname']) && !empty($organizationData[$lang]['displayname'])) {
         $providerNameStr = <<<PROVIDERNAME
     ProviderName="{$organizationData[$lang]['displayname']}"
@@ -208,5 +204,14 @@ AUTHNREQUEST;
   public function getXML()
   {
     return $this->_authnRequest;
+  }
+
+  public static function buildStruct() {
+    $doc = new \DOMDocument('1.0','UTF-8');
+    $doc->formatOutput = true;
+    $root = $doc->createElementNS('saml2p','AuthnRequest');
+    $root->setAttribute('Version','2.0');
+    $root->setAttributeNS('xmlns','saml2p','urn:oasis:names:tc:SAML:2.0:protocol');
+    return $doc->saveXML();
   }
 }
