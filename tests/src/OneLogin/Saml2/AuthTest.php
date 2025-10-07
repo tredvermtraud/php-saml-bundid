@@ -952,6 +952,7 @@ class AuthTest extends \PHPUnit\Framework\TestCase
         $this->assertArrayHasKey('Signature', $parsedQuery);
         $this->assertEquals($parsedQuery['RelayState'], $returnTo);
         $this->assertEquals(XMLSecurityKey::RSA_SHA256, $parsedQuery['SigAlg']);
+        $this->assertEquals(XMLSecurityKey::RSA_SHA256, $parsedQuery['SigAlg']);
     }
 
     /**
@@ -980,6 +981,7 @@ class AuthTest extends \PHPUnit\Framework\TestCase
         $decoded = base64_decode($encodedRequest);
         $request = gzinflate($decoded);
         $this->assertStringNotContainsString('ForceAuthn="true"', $request);
+        $this->assertStringNotContainsString('ForceAuthn="true"', $request);
 
         $returnTo = 'http://example.com/returnto';
 
@@ -992,6 +994,7 @@ class AuthTest extends \PHPUnit\Framework\TestCase
         $encodedRequest2 = $parsedQuery2['SAMLRequest'];
         $decoded2 = base64_decode($encodedRequest2);
         $request2 = gzinflate($decoded2);
+        $this->assertStringNotContainsString('ForceAuthn="true"', $request2);
         $this->assertStringNotContainsString('ForceAuthn="true"', $request2);
 
         $returnTo = 'http://example.com/returnto';
@@ -1034,6 +1037,7 @@ class AuthTest extends \PHPUnit\Framework\TestCase
         $decoded = base64_decode($encodedRequest);
         $request = gzinflate($decoded);
         $this->assertStringNotContainsString('IsPassive="true"', $request);
+        $this->assertStringNotContainsString('IsPassive="true"', $request);
 
         $returnTo = 'http://example.com/returnto';
         $targetUrl2 = $auth->login($returnTo, [], false, false, true);
@@ -1045,6 +1049,7 @@ class AuthTest extends \PHPUnit\Framework\TestCase
         $encodedRequest2 = $parsedQuery2['SAMLRequest'];
         $decoded2 = base64_decode($encodedRequest2);
         $request2 = gzinflate($decoded2);
+        $this->assertStringNotContainsString('IsPassive="true"', $request2);
         $this->assertStringNotContainsString('IsPassive="true"', $request2);
 
         $returnTo = 'http://example.com/returnto';
@@ -1081,6 +1086,7 @@ class AuthTest extends \PHPUnit\Framework\TestCase
         $encodedRequest = $parsedQuery['SAMLRequest'];
         $decoded = base64_decode($encodedRequest);
         $request = gzinflate($decoded);
+        $this->assertStringNotContainsString('<samlp:NameIDPolicy', $request);
         $this->assertStringNotContainsString('<samlp:NameIDPolicy', $request);
 
         $returnTo = 'http://example.com/returnto';
@@ -1129,6 +1135,7 @@ class AuthTest extends \PHPUnit\Framework\TestCase
         $decoded = base64_decode($encodedRequest);
         $request = gzinflate($decoded);
         $this->assertStringNotContainsString('<saml:Subject', $request);
+        $this->assertStringNotContainsString('<saml:Subject', $request);
 
         $returnTo = 'http://example.com/returnto';
         $targetUrl2 = $auth->login($returnTo, [], false, false, true, true, "testuser@example.com");
@@ -1147,7 +1154,7 @@ class AuthTest extends \PHPUnit\Framework\TestCase
         $returnTo = 'http://example.com/returnto';
         $settingsInfo['sp']['NameIDFormat'] = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
         $auth2 = new Auth($settingsInfo);
-        $targetUrl3 = $auth2->login($returnTo, [], false, false, true);
+        $targetUrl3 = $auth2->login($returnTo, [], false, false, true, false, "testuser@example.com");
         $parsedQuery3 = getParamsFromUrl($targetUrl3);
 
         $ssoUrl3 = $settingsInfo['idp']['singleSignOnService']['url'];
