@@ -8,7 +8,7 @@ session_start();
 
 require_once dirname(__DIR__) . '/_toolkit_loader.php';
 
-use OneLogin\Saml2\Auth;
+use Ermtraud\Saml2\Auth;
 
 $auth = new Auth();
 

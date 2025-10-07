@@ -11,7 +11,7 @@
  * @link    https://github.com/SAML-Toolkits/php-saml
  */
 
-namespace OneLogin\Saml2;
+namespace Ermtraud\Saml2;
 
 /**
  * SAML 2 Authentication Request
@@ -48,7 +48,7 @@ class AuthnRequest
    * @param bool $setNameIdPolicy When true the AuthNReuqest will set a nameIdPolicy
    * @param string $nameIdValueReq Indicates to the IdP the subject that should be authenticated
    */
-  public function __construct(\OneLogin\Saml2\Settings $settings, $forceAuthn = false, $isPassive = false, $setNameIdPolicy = true, $nameIdValueReq = null)
+  public function __construct(Settings $settings, $forceAuthn = false, $isPassive = false, $setNameIdPolicy = true, $nameIdValueReq = null)
   {
     $this->_settings = $settings;
 
@@ -204,14 +204,5 @@ AUTHNREQUEST;
   public function getXML()
   {
     return $this->_authnRequest;
-  }
-
-  public static function buildStruct() {
-    $doc = new \DOMDocument('1.0','UTF-8');
-    $doc->formatOutput = true;
-    $root = $doc->createElementNS('saml2p','AuthnRequest');
-    $root->setAttribute('Version','2.0');
-    $root->setAttributeNS('xmlns','saml2p','urn:oasis:names:tc:SAML:2.0:protocol');
-    return $doc->saveXML();
   }
 }

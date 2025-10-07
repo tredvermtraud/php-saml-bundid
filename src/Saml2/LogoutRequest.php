@@ -10,7 +10,7 @@
  * @license MIT https://github.com/SAML-Toolkits/php-saml/blob/master/LICENSE
  * @link    https://github.com/SAML-Toolkits/php-saml
  */
-namespace OneLogin\Saml2;
+namespace Ermtraud\Saml2;
 
 use RobRichards\XMLSecLibs\XMLSecurityKey;
 
@@ -61,7 +61,7 @@ class LogoutRequest
    * @param string|null             $nameIdNameQualifier The NameID NameQualifier will be set in the LogoutRequest.
    * @param string|null             $nameIdSPNameQualifier The NameID SP NameQualifier will be set in the LogoutRequest.
    */
-  public function __construct(\OneLogin\Saml2\Settings $settings, $request = null, $nameId = null, $sessionIndex = null, $nameIdFormat = null, $nameIdNameQualifier = null, $nameIdSPNameQualifier = null)
+  public function __construct(Settings $settings, $request = null, $nameId = null, $sessionIndex = null, $nameIdFormat = null, $nameIdNameQualifier = null, $nameIdSPNameQualifier = null)
   {
     $this->_settings = $settings;
 

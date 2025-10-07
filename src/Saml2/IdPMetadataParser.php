@@ -11,7 +11,7 @@
  * @link    https://github.com/SAML-Toolkits/php-saml
  */
 
-namespace OneLogin\Saml2;
+namespace Ermtraud\Saml2;
 
 use DOMDocument;
 use Exception;

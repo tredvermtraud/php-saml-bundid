@@ -12,7 +12,7 @@
     <target>docs/Saml3</target>
   </transformer>
   <transformations>
-    <template name="onelogin" />
+    <template name="ermtraud" />
     <!--    <template name="clean" /> -->
   </transformations>
   <files>

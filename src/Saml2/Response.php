@@ -11,7 +11,7 @@
  * @link    https://github.com/SAML-Toolkits/php-saml
  */
 
-namespace OneLogin\Saml2;
+namespace Ermtraud\Saml2;
 
 use RobRichards\XMLSecLibs\XMLSecurityKey;
 use RobRichards\XMLSecLibs\XMLSecEnc;
@@ -91,7 +91,7 @@ class Response
    * @throws Exception
    * @throws ValidationError
    */
-  public function __construct(\OneLogin\Saml2\Settings $settings, $response)
+  public function __construct(Settings $settings, $response)
   {
     $this->_settings = $settings;
 

@@ -6,8 +6,8 @@
 
 require_once dirname(__DIR__) . '/_toolkit_loader.php';
 
-use OneLogin\Saml2\Auth;
-use OneLogin\Saml2\Error;
+use Ermtraud\Saml2\Auth;
+use Ermtraud\Saml2\Error;
 
 try {
   $auth = new Auth();

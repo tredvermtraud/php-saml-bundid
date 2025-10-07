@@ -11,7 +11,7 @@
  * @link    https://github.com/SAML-Toolkits/php-saml
  */
 
-namespace OneLogin\Saml2;
+namespace Ermtraud\Saml2;
 
 use DOMDocument;
 use DOMNodeList;
@@ -67,7 +67,7 @@ class LogoutResponse
    * @throws Error
    * @throws Exception
    */
-  public function __construct(\OneLogin\Saml2\Settings $settings, $response = null)
+  public function __construct(Settings $settings, $response = null)
   {
     $this->_settings = $settings;
 
