@@ -1,5 +1,5 @@
 {
-  "name": "ermtraud/php-saml",
+  "name": "tredvermtraud/php-saml-bundid",
   "description": "PHP SAML Toolkit",
   "license": "MIT",
   "homepage": "https://github.com/SAML-Toolkits/php-saml",
@@ -20,9 +20,17 @@
     "issues": "https://github.com/onelogin/SAML-Toolkits/issues",
     "source": "https://github.com/onelogin/SAML-Toolkits/"
   },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/tredvermtraud/php83seclib"
+    }
+  ],
+  "minimum-stability": "dev",
+  "prefer-stable": true,
   "require": {
     "php": ">=7.3",
-    "phpseclib/phpseclib": "3.0"
+    "tredvermtraud/php83seclib": "^3.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^9.5",
