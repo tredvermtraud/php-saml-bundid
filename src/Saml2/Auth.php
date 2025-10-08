@@ -13,7 +13,7 @@
 
 namespace Ermtraud\Saml2;
 
-use RobRichards\XMLSecLibs\XMLSecurityKey;
+use Ermtraud\XMLSecLibs\XMLSecurityKey;
 
 use Exception;
 

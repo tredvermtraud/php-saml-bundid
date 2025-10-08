@@ -13,9 +13,9 @@
 
 namespace Ermtraud\Saml2;
 
-use RobRichards\XMLSecLibs\XMLSecurityKey;
-use RobRichards\XMLSecLibs\XMLSecurityDSig;
-use RobRichards\XMLSecLibs\XMLSecEnc;
+use Ermtraud\XMLSecLibs\XMLSecurityKey;
+use Ermtraud\XMLSecLibs\XMLSecurityDSig;
+use Ermtraud\XMLSecLibs\XMLSecEnc;
 
 use DOMDocument;
 use DOMElement;

@@ -13,8 +13,8 @@
 
 namespace Ermtraud\Saml2;
 
-use RobRichards\XMLSecLibs\XMLSecurityKey;
-use RobRichards\XMLSecLibs\XMLSecEnc;
+use Ermtraud\XMLSecLibs\XMLSecurityKey;
+use Ermtraud\XMLSecLibs\XMLSecEnc;
 
 use DOMDocument;
 use DOMNodeList;
