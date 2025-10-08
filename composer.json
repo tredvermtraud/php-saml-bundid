@@ -20,17 +20,11 @@
     "issues": "https://github.com/onelogin/SAML-Toolkits/issues",
     "source": "https://github.com/onelogin/SAML-Toolkits/"
   },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/tredvermtraud/php83seclib"
-    }
-  ],
   "minimum-stability": "dev",
   "prefer-stable": true,
   "require": {
     "php": ">=7.3",
-    "tredvermtraud/php83seclib": "^3.0"
+    "phpseclib/phpseclib": "^3.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^9.5",
