@@ -8,6 +8,8 @@ Add SAML support to your PHP software using this library.
 
 This version is compatible with PHP >=7.3 and 8.X and does not include xmlseclibs (you will need to install it via composer, dependency described in composer.json)
 
+master branch is development
+
 ## Security Guidelines
 
 If you believe you have discovered a security vulnerability in this toolkit, please report it by mail to the maintainer: sixto.martin.garcia+security@gmail.com
