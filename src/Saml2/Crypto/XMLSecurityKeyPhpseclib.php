@@ -1,5 +1,5 @@
 <?php
-namespace Onelogin\Saml2\Crypto;
+namespace Ermtraud\Saml2\Crypto;
 
 use Exception;
 use phpseclib3\Crypt\Common\PublicKey;
