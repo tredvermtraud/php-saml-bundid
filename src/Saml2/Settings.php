@@ -17,7 +17,7 @@ use Ermtraud\XMLSecLibs\XMLSecurityDSig;
 
 use DOMDocument;
 use Exception;
-use Onelogin\Saml2\Crypto\XMLSecurityKeyPhpseclib;
+use Ermtraud\Saml2\Crypto\XMLSecurityKeyPhpseclib;
 
 /**
  * Configuration of the SAML PHP Toolkit

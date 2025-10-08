@@ -13,8 +13,8 @@
 
 namespace Ermtraud\Saml2;
 
+use Ermtraud\Saml2\Crypto\XMLSecurityKeyPhpseclib;
 use Exception;
-use Onelogin\Saml2\Crypto\XMLSecurityKeyPhpseclib;
 
 /**
  * Main class of SAML PHP Toolkit

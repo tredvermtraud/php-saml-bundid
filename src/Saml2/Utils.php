@@ -22,7 +22,7 @@ use DOMNodeList;
 use DomNode;
 use DOMXPath;
 use Exception;
-use Onelogin\Saml2\Crypto\XMLSecurityKeyPhpseclib;
+use Ermtraud\Saml2\Crypto\XMLSecurityKeyPhpseclib;
 
 /**
  * Utils of SAML PHP Toolkit

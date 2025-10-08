@@ -19,7 +19,7 @@ use DOMDocument;
 use DOMNodeList;
 use DOMXPath;
 use Exception;
-use Onelogin\Saml2\Crypto\XMLSecurityKeyPhpseclib;
+use Ermtraud\Saml2\Crypto\XMLSecurityKeyPhpseclib;
 
 /**
  * SAML 2 Authentication Response
