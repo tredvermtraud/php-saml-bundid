@@ -13,13 +13,13 @@
 
 namespace Ermtraud\Saml2;
 
-use Ermtraud\XMLSecLibs\XMLSecurityKey;
 use Ermtraud\XMLSecLibs\XMLSecEnc;
 
 use DOMDocument;
 use DOMNodeList;
 use DOMXPath;
 use Exception;
+use Onelogin\Saml2\Crypto\XMLSecurityKeyPhpseclib;
 
 /**
  * SAML 2 Authentication Response
@@ -619,8 +619,8 @@ class Response
           Error::PRIVATE_KEY_NOT_FOUND
         );
       }
-      $seckey = new XMLSecurityKey(XMLSecurityKey::RSA_1_5, array('type' => 'private'));
-      $seckey->loadKey($pem);
+      $seckey = new XMLSecurityKeyPhpseclib(XMLSecurityKeyPhpseclib::RSA_1_5, array('type' => 'private'));
+      $seckey->loadKeyFromString($pem);
 
       $nameId = Utils::decryptElement($encryptedData, $seckey);
 

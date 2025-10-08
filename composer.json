@@ -21,7 +21,8 @@
     "source": "https://github.com/onelogin/SAML-Toolkits/"
   },
   "require": {
-    "php": ">=7.3"
+    "php": ">=7.3",
+    "phpseclib/phpseclib": "3.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^9.5",

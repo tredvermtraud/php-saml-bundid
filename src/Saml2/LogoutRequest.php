@@ -12,10 +12,9 @@
  */
 namespace Ermtraud\Saml2;
 
-use Ermtraud\XMLSecLibs\XMLSecurityKey;
-
 use DOMDocument;
 use Exception;
+use Onelogin\Saml2\Crypto\XMLSecurityKeyPhpseclib;
 
 /**
  * SAML 2 Logout Request
@@ -240,8 +239,8 @@ LOGOUTREQUEST;
         );
       }
 
-      $seckey = new XMLSecurityKey(XMLSecurityKey::RSA_1_5, array('type' => 'private'));
-      $seckey->loadKey($key);
+      $seckey = new XMLSecurityKeyPhpseclib(XMLSecurityKeyPhpseclib::RSA_1_5, array('type' => 'private'));
+      $seckey->loadKeyFromString($key);
 
       $nameId = Utils::decryptElement($encryptedData, $seckey);
 

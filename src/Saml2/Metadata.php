@@ -13,7 +13,6 @@
 
 namespace Ermtraud\Saml2;
 
-use Ermtraud\XMLSecLibs\XMLSecurityKey;
 use Ermtraud\XMLSecLibs\XMLSecurityDSig;
 
 use DOMDocument;
@@ -212,7 +211,7 @@ METADATA_TEMPLATE;
    *
    * @throws Exception
    */
-  public static function signMetadata($metadata, $key, $cert, $signAlgorithm = XMLSecurityKey::RSA_SHA256, $digestAlgorithm = XMLSecurityDSig::SHA256)
+  public static function signMetadata($metadata, $key, $cert, $signAlgorithm = XMLSecurityKeyPhpseclib::RSA_SHA256, $digestAlgorithm = XMLSecurityDSig::SHA256)
   {
     return Utils::addSign($metadata, $key, $cert, $signAlgorithm, $digestAlgorithm);
   }

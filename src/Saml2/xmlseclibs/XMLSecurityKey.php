@@ -46,23 +46,24 @@ use Exception;
 
 class XMLSecurityKey
 {
-  const TRIPLEDES_CBC = 'http://www.w3.org/2001/04/xmlenc#tripledes-cbc';
-  const AES128_CBC = 'http://www.w3.org/2001/04/xmlenc#aes128-cbc';
-  const AES192_CBC = 'http://www.w3.org/2001/04/xmlenc#aes192-cbc';
-  const AES256_CBC = 'http://www.w3.org/2001/04/xmlenc#aes256-cbc';
-  const AES128_GCM = 'http://www.w3.org/2009/xmlenc11#aes128-gcm';
-  const AES192_GCM = 'http://www.w3.org/2009/xmlenc11#aes192-gcm';
-  const AES256_GCM = 'http://www.w3.org/2009/xmlenc11#aes256-gcm';
-  const RSA_1_5 = 'http://www.w3.org/2001/04/xmlenc#rsa-1_5';
-  const RSA_OAEP_MGF1P = 'http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p';
-  const RSA_OAEP = 'http://www.w3.org/2009/xmlenc11#rsa-oaep';
-  const DSA_SHA1 = 'http://www.w3.org/2000/09/xmldsig#dsa-sha1';
-  const RSA_SHA1 = 'http://www.w3.org/2000/09/xmldsig#rsa-sha1';
-  const RSA_SHA256 = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256';
-  const RSA_SHA384 = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha384';
-  const RSA_SHA512 = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha512';
-  const HMAC_SHA1 = 'http://www.w3.org/2000/09/xmldsig#hmac-sha1';
-  const AUTHTAG_LENGTH = 16;
+  public const string TRIPLEDES_CBC = 'http://www.w3.org/2001/04/xmlenc#tripledes-cbc';
+  public const string AES128_CBC = 'http://www.w3.org/2001/04/xmlenc#aes128-cbc';
+  public const string AES192_CBC = 'http://www.w3.org/2001/04/xmlenc#aes192-cbc';
+  public const string AES256_CBC = 'http://www.w3.org/2001/04/xmlenc#aes256-cbc';
+  public const string AES128_GCM = 'http://www.w3.org/2009/xmlenc11#aes128-gcm';
+  public const string AES192_GCM = 'http://www.w3.org/2009/xmlenc11#aes192-gcm';
+  public const string AES256_GCM = 'http://www.w3.org/2009/xmlenc11#aes256-gcm';
+  public const string RSA_1_5 = 'http://www.w3.org/2001/04/xmlenc#rsa-1_5';
+  public const string RSA_OAEP_MGF1P = 'http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p';
+  public const string RSA_OAEP = 'http://www.w3.org/2009/xmlenc11#rsa-oaep';
+  public const string DSA_SHA1 = 'http://www.w3.org/2000/09/xmldsig#dsa-sha1';
+  public const string RSA_SHA1 = 'http://www.w3.org/2000/09/xmldsig#rsa-sha1';
+  public const string RSA_SHA256 = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256';
+  public const string RSA_SHA384 = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha384';
+  public const string RSA_SHA512 = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha512';
+  public const string RSA_SHA256_MGF1 = 'http://www.w3.org/2007/05/xmldsig-more#sha256-rsa-MGF1';
+  public const string HMAC_SHA1 = 'http://www.w3.org/2000/09/xmldsig#hmac-sha1';
+  public const int AUTHTAG_LENGTH = 16;
 
   /** @var array */
   private $cryptParams = array();
@@ -253,6 +254,18 @@ class XMLSecurityKey
           }
         }
         throw new Exception('Certificate "type" (private/public) must be passed via parameters');
+      case (self::RSA_SHA256_MGF1):
+        $this->cryptParams['library'] = 'openssl';
+        $this->cryptParams['method'] = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256';
+        $this->cryptParams['padding'] = OPENSSL_PKCS1_PADDING;
+        $this->cryptParams['digest'] = 'SHA256';
+        if(is_array($params) && !empty($params['type'])) {
+          if($params['type'] == 'public' || $params['type'] == 'private') {
+            $this->cryptParams['type'] = $params['type'];
+            break;
+          }
+        }
+        throw new Exception('Certificate "type" (private/public) must be passed via parameters');
       case (self::HMAC_SHA1):
         $this->cryptParams['library'] = $type;
         $this->cryptParams['method'] = 'http://www.w3.org/2000/09/xmldsig#hmac-sha1';
@@ -356,11 +369,7 @@ class XMLSecurityKey
    */
   public function loadKey($key, $isFile = false, $isCert = false)
   {
-    if($isFile) {
-      $this->key = file_get_contents($key);
-    } else {
-      $this->key = $key;
-    }
+    $this->key = $isFile ? file_get_contents($key) : $key;
     if($isCert) {
       $this->key = openssl_x509_read($this->key);
       openssl_x509_export($this->key, $str_cert);

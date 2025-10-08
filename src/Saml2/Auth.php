@@ -13,9 +13,8 @@
 
 namespace Ermtraud\Saml2;
 
-use Ermtraud\XMLSecLibs\XMLSecurityKey;
-
 use Exception;
+use Onelogin\Saml2\Crypto\XMLSecurityKeyPhpseclib;
 
 /**
  * Main class of SAML PHP Toolkit
@@ -729,7 +728,7 @@ class Auth
    * @throws Exception
    * @throws Error
    */
-  public function buildRequestSignature($samlRequest, $relayState, $signAlgorithm = XMLSecurityKey::RSA_SHA256)
+  public function buildRequestSignature($samlRequest, $relayState, $signAlgorithm = XMLSecurityKeyPhpseclib::RSA_SHA256)
   {
     return $this->buildMessageSignature($samlRequest, $relayState, $signAlgorithm, "SAMLRequest");
   }
@@ -746,7 +745,7 @@ class Auth
    * @throws Exception
    * @throws Error
    */
-  public function buildResponseSignature($samlResponse, $relayState, $signAlgorithm = XMLSecurityKey::RSA_SHA256)
+  public function buildResponseSignature($samlResponse, $relayState, $signAlgorithm = XMLSecurityKeyPhpseclib::RSA_SHA256)
   {
     return $this->buildMessageSignature($samlResponse, $relayState, $signAlgorithm, "SAMLResponse");
   }
@@ -764,7 +763,7 @@ class Auth
    * @throws Exception
    * @throws Error
    */
-  private function buildMessageSignature($samlMessage, $relayState, $signAlgorithm = XMLSecurityKey::RSA_SHA256, $type = "SAMLRequest")
+  private function buildMessageSignature($samlMessage, $relayState, $signAlgorithm = XMLSecurityKeyPhpseclib::RSA_SHA256, $type = "SAMLRequest")
   {
     $key = $this->_settings->getSPkey();
     if(empty($key)) {
@@ -777,8 +776,8 @@ class Auth
       throw new Error($errorMsg, Error::PRIVATE_KEY_NOT_FOUND);
     }
 
-    $objKey = new XMLSecurityKey($signAlgorithm, array('type' => 'private'));
-    $objKey->loadKey($key, false);
+    $objKey = new XMLSecurityKeyPhpseclib($signAlgorithm, array('type' => 'private'));
+    $objKey->loadKeyFromString($key, false);
 
     $security = $this->_settings->getSecurityData();
     if($security['lowercaseUrlencoding']) {

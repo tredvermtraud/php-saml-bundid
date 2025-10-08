@@ -13,11 +13,11 @@
 
 namespace Ermtraud\Saml2;
 
-use Ermtraud\XMLSecLibs\XMLSecurityKey;
 use Ermtraud\XMLSecLibs\XMLSecurityDSig;
 
 use DOMDocument;
 use Exception;
+use Onelogin\Saml2\Crypto\XMLSecurityKeyPhpseclib;
 
 /**
  * Configuration of the SAML PHP Toolkit
@@ -421,7 +421,7 @@ class Settings
 
     // SignatureAlgorithm
     if(!isset($this->_security['signatureAlgorithm'])) {
-      $this->_security['signatureAlgorithm'] = XMLSecurityKey::RSA_SHA256;
+      $this->_security['signatureAlgorithm'] = XMLSecurityKeyPhpseclib::RSA_SHA256;
     }
 
     // DigestAlgorithm
@@ -431,7 +431,7 @@ class Settings
 
     // EncryptionAlgorithm
     if(!isset($this->_security['encryption_algorithm'])) {
-      $this->_security['encryption_algorithm'] = XMLSecurityKey::AES128_CBC;
+      $this->_security['encryption_algorithm'] = XMLSecurityKeyPhpseclib::AES128_CBC;
     }
 
     if(!isset($this->_security['lowercaseUrlencoding'])) {
