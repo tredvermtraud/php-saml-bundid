@@ -1,6 +1,6 @@
 <?php
 
-namespace Ermtraud\XMLSecLibs\Utils;
+namespace Ermtraud\Saml2\XMLSecLibs\Utils;
 
 class XPath
 {

@@ -1,12 +1,12 @@
 <?php
-namespace Ermtraud\XMLSecLibs;
+namespace Ermtraud\Saml2\XMLSecLibs;
 
 use DOMDocument;
 use DOMElement;
 use DOMNode;
 use DOMXPath;
 use Exception;
-use Ermtraud\XMLSecLibs\Utils\XPath as XPath;
+use Ermtraud\Saml2\XMLSecLibs\Utils\XPath;
 
 /**
  * xmlseclibs.php

@@ -13,7 +13,7 @@
 
 namespace Ermtraud\Saml2;
 
-use Ermtraud\XMLSecLibs\XMLSecurityDSig;
+use Ermtraud\Saml2\XMLSecLibs\XMLSecurityDSig;
 
 use DOMDocument;
 use Exception;

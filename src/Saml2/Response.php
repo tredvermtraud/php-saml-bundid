@@ -13,7 +13,7 @@
 
 namespace Ermtraud\Saml2;
 
-use Ermtraud\XMLSecLibs\XMLSecEnc;
+use Ermtraud\Saml2\XMLSecLibs\XMLSecEnc;
 
 use DOMDocument;
 use DOMNodeList;

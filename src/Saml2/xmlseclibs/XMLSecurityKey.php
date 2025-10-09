@@ -1,5 +1,5 @@
 <?php
-namespace Ermtraud\XMLSecLibs;
+namespace Ermtraud\Saml2\XMLSecLibs;
 
 use DOMElement;
 use Exception;
