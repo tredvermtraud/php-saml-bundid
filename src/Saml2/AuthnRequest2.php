@@ -13,9 +13,12 @@ class AuthnRequest2 extends RequestAbstractType
   protected bool $requiresRequestedAuthnContext = false;
   protected bool $requiresScoping = false;
 
-  public function __construct(private Settings $settings, ?string $version = "1.0", ?string $encoding = "UTF-8")
+  private string $_id;
+
+  public function __construct(private Settings $_settings, ?string $version = "1.0", ?string $encoding = "UTF-8")
   {
     parent::__construct($version, $encoding);
+    $this->_id = Utils::generateUniqueID();
   }
 
   public function buildStruct() {}
@@ -24,16 +27,16 @@ class AuthnRequest2 extends RequestAbstractType
   {
     $root = $this->createElementNS('urn:oasis:names:tc:SAML:2.0:protocol', 'saml2p:AuthnRequest');
     $this->doc->appendChild($root);
-    $root->setAttribute('AssertionConsumerServiceURL', $this->settings->getSPData()['assertionConsumerService']['url']);
-    $root->setAttribute('ProtocolBinding', $this->settings->getSPData()['assertionConsumerService']['binding']);
-    $root->setAttribute('Destination', $this->settings->getIdPSSOUrl());
+    $root->setAttribute('AssertionConsumerServiceURL', $this->_settings->getSPData()['assertionConsumerService']['url']);
+    $root->setAttribute('ProtocolBinding', $this->_settings->getSPData()['assertionConsumerService']['binding']);
+    $root->setAttribute('Destination', $this->_settings->getIdPSSOUrl());
     $root->setAttribute('IssueInstant', Utils::parseTime2SAML(time()));
     $root->setAttribute('ForceAuthn', $forceAuthn ? 'true' : 'false');
     $root->setAttribute('IsPassive', $isPassive ? 'true' : 'false');
     $root->setAttribute('Version', '2.0');
-    $root->setAttribute('ID', Utils::generateUniqueID());
+    $root->setAttribute('ID', $this->getId());
 
-    $Issuer = $this->createElementNS('urn:oasis:names:tc:SAML:2.0:assertion', 'saml2a:Issuer', $this->settings->getSPData()['entityId']);
+    $Issuer = $this->createElementNS('urn:oasis:names:tc:SAML:2.0:assertion', 'saml2a:Issuer', $this->_settings->getSPData()['entityId']);
     $root->appendChild($Issuer);
 
     /* Extensions */ {
@@ -41,14 +44,14 @@ class AuthnRequest2 extends RequestAbstractType
       $root->appendChild($Extensions);
       $AuthenticationRequest = $this->createElementNS('https://www.akdb.de/request/2018/09', 'akdb:AuthenticationRequest');
       $Extensions->appendChild($AuthenticationRequest);
-      if($this->settings->isDebugActive())
+      if($this->_settings->isDebugActive())
         $AuthenticationRequest->setAttribute('EnableStatusDetail', 'true');
-      $AuthenticationRequest->setAttribute('Version', $this->settings->getAttributeConsumingService()['version']);
+      $AuthenticationRequest->setAttribute('Version', $this->_settings->getAttributeConsumingService()['version']);
 
       /* AuthnMethods */ {
         $AuthnMethods = $this->createElementNS('https://www.akdb.de/request/2018/09', 'akdb:AuthnMethods');
         $AuthenticationRequest->appendChild($AuthnMethods);
-        foreach($this->settings->getAuthnMethods() as $qN => $details) {
+        foreach($this->_settings->getAuthnMethods() as $qN => $details) {
           $methodElement = $this->createElementNS('https://www.akdb.de/request/2018/09', "akdb:$qN");
           foreach($details as $subName => $attOrVal) {
             if(is_array($attOrVal)) {
@@ -71,7 +74,7 @@ class AuthnRequest2 extends RequestAbstractType
       /* RequestedAttributes */ {
         $RequestedAttributes = $this->createElementNS('https://www.akdb.de/request/2018/09', 'akdb:RequestedAttributes');
         $AuthenticationRequest->appendChild($RequestedAttributes);
-        foreach($this->settings->getRequestedAttributes() as $attribute) {
+        foreach($this->_settings->getRequestedAttributes() as $attribute) {
           $RequestedAttribute = $this->createElementNS('https://www.akdb.de/request/2018/09', 'akdb:RequestedAttribute');
           $RequestedAttribute->setAttribute('Name', $attribute['name']);
           $RequestedAttribute->setAttribute('RequiredAttribute', is_bool($attribute['isRequired']) ? ($attribute['isRequired'] ? 'true' : 'false') : (string)$attribute['isRequired']);
@@ -82,7 +85,7 @@ class AuthnRequest2 extends RequestAbstractType
       /* DisplayInformation */ {
         $DisplayInformation = $this->createElementNS('https://www.akdb.de/request/2018/09', 'akdb:DisplayInformation');
         $AuthenticationRequest->appendChild($DisplayInformation);
-        $di = $this->settings->getDisplayInformation();
+        $di = $this->_settings->getDisplayInformation();
 
         $Version = $this->createElementNS('https://www.akdb.de/request/2018/09/classic-ui/v1', 'classic-ui:Version');
         $DisplayInformation->appendChild($Version);
@@ -103,11 +106,16 @@ class AuthnRequest2 extends RequestAbstractType
     /* RequestedAuthnContext */ {
       $RequestedAuthnContext = $this->createElementNS('urn:oasis:names:tc:SAML:2.0:protocol', 'saml2p:RequestedAuthnContext');
       $root->appendChild($RequestedAuthnContext);
-      $RequestedAuthnContext->setAttribute('Comparison', $this->settings->getSecurityData()['requestedAuthnContextComparison']);
-      foreach($this->settings->getSecurityData()['requestedAuthnContext'] as $context) {
+      $RequestedAuthnContext->setAttribute('Comparison', $this->_settings->getSecurityData()['requestedAuthnContextComparison']);
+      foreach($this->_settings->getSecurityData()['requestedAuthnContext'] as $context) {
         $AuthnContextClassRef = $this->createElementNS('urn:oasis:names:tc:SAML:2.0:assertion', 'saml2a:AuthnContextClassRef', $context);
       }
       $RequestedAuthnContext->appendChild($AuthnContextClassRef);
     }
+  }
+
+  public function getId()
+  {
+    return $this->_id;
   }
 }
