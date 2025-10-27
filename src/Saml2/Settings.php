@@ -810,6 +810,73 @@ class Settings
   }
 
   /**
+   * Gets Attribute Consuming Service data.
+   *
+   * @return array  ACS info
+   */
+  public function getAttributeConsumingService()
+  {
+    $sp = $this->getSPData();
+
+    if(isset($sp['attributeConsumingService']) && is_array($sp['attributeConsumingService'])) {
+      return $sp['attributeConsumingService'];
+    }
+
+    return [];
+  }
+
+  /**
+   * Gets Attribute Consuming Service data.
+   *
+   * @return array  ACS info
+   */
+  public function getDisplayInformation()
+  {
+    $acs = $this->getAttributeConsumingService();
+    $data = [];
+
+    $data['Purpose'] = $acs['serviceDescription'] ?? "<![CDATA[Purpose]]>";
+    $data['OrganizationDisplayName'] = $acs['serviceName'] ?? "<![CDATA[OrganizationDisplayName]]>";
+    $data['Lang'] = $acs['lang'] ?? "<![CDATA[Lang]]>";
+    $data['BackURL'] = $acs['url'] ?? "<![CDATA[BackURL]]>";
+    $data['OnlineServiceId'] = $acs['serviceName'] ?? "<![CDATA[OnlineServiceId]]>";
+
+    return $data;
+  }
+
+  /**
+   * Gets Requested Attributes.
+   *
+   * @return array{name:string,isRequired:bool,nameFormat:string,friendlyName:string,attributeValue:mixed}[] Requested Attributes
+   */
+  public function getRequestedAttributes()
+  {
+    $acs = $this->getAttributeConsumingService();
+
+    if(isset($acs['requestedAttributes']) && is_array($acs['requestedAttributes'])) {
+      return $acs['requestedAttributes'];
+    }
+
+    return [];
+  }
+
+  /**
+   * Gets AuthnMethods.
+   *
+   * @return array Requested Attributes
+   */
+  public function getAuthnMethods()
+  {
+    $acs = $this->getAttributeConsumingService();
+
+    if(isset($acs['authnMethods']) && is_array($acs['authnMethods'])) {
+      return $acs['authnMethods'];
+    }
+
+    return [];
+  }
+
+  /**
    * Should SAML requests be compressed?
    *
    * @return bool Yes/No as True/False
