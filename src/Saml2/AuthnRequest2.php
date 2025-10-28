@@ -21,9 +21,7 @@ class AuthnRequest2 extends RequestAbstractType
     $this->_id = Utils::generateUniqueID();
   }
 
-  public function buildStruct() {}
-
-  public function buildBundIDStruct(?bool $forceAuthn = false, ?bool $isPassive = false)
+  public function buildStruct(?bool $forceAuthn = false, ?bool $isPassive = false, $setNameIdPolicy = true, $nameIdValueReq = null)
   {
     $root = $this->createElementNS('urn:oasis:names:tc:SAML:2.0:protocol', 'saml2p:AuthnRequest');
     $this->doc->appendChild($root);
@@ -38,6 +36,31 @@ class AuthnRequest2 extends RequestAbstractType
 
     $Issuer = $this->createElementNS('urn:oasis:names:tc:SAML:2.0:assertion', 'saml2a:Issuer', $this->_settings->getSPData()['entityId']);
     $root->appendChild($Issuer);
+
+    if(isset($nameIdValueReq)) {
+      $nameIDFormat = $this->_settings->getSPData()['NameIDFormat'];
+      $Subject = $this->createElementNS('urn:oasis:names:tc:SAML:2.0:assertion', 'samla:Subject');
+      $root->appendChild($Subject);
+      $NameID = $this->createElementNS('urn:oasis:names:tc:SAML:2.0:assertion', 'samla:NameID', $nameIdValueReq);
+      $Subject->appendChild($NameID);
+      $NameID->setAttribute('Format', $nameIDFormat);
+      $SubjectConfirmation = $this->createElementNS('urn:oasis:names:tc:SAML:2.0:assertion', 'saml:SubjectConfirmation', '');
+      $Subject->appendChild($SubjectConfirmation);
+      $SubjectConfirmation->setAttribute('Method', 'urn:oasis:names:tc:SAML:2.0:cm:bearer');
+    }
+
+    if($setNameIdPolicy) {
+      $nameIDFormat = $this->_settings->getSPData()['NameIDFormat'];
+      $security = $this->_settings->getSecurityData();
+      if(isset($security['wantNameIdEncrypted']) && $security['wantNameIdEncrypted']) {
+        $nameIDFormat = Constants::NAMEID_ENCRYPTED;
+      }
+
+      $NameIDPolicy = $this->createElementNS('urn:oasis:names:tc:SAML:2.0:assertion', 'samlp:NameIDPolicy');
+      $root->appendChild($NameIDPolicy);
+      $NameIDPolicy->setAttribute('Format', $nameIDFormat);
+      $NameIDPolicy->setAttribute('AllowCreate', 'true');
+    }
 
     /* Extensions */ {
       $Extensions = $this->createElementNS('urn:oasis:names:tc:SAML:2.0:protocol', 'saml2p:Extensions');
