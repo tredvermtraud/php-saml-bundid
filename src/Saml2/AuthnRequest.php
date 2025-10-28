@@ -53,7 +53,7 @@ class AuthnRequest
     $this->_settings = $settings;
 
     $authnrequest = new AuthnRequest2($settings);
-    $authnrequest->buildBundIDStruct($forceAuthn = false, $isPassive = false);
+    $authnrequest->buildBundIDStruct($forceAuthn, $isPassive);
     $this->_authnRequest = $authnrequest->getXML();
     $this->_id = $authnrequest->getId();
   }
