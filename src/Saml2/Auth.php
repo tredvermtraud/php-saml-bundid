@@ -776,7 +776,7 @@ class Auth
       throw new Error($errorMsg, Error::PRIVATE_KEY_NOT_FOUND);
     }
 
-    $objKey = new XMLSecurityKeyPhpseclib($signAlgorithm, array('type' => 'private'));
+    $objKey = new XMLSecurityKeyPhpseclib($signAlgorithm, array_merge(array('type' => 'private'), $this->_settings->getSecurityData()['signingParameters'] ?? []));
     $objKey->loadKeyFromString($key, false);
 
     $security = $this->_settings->getSecurityData();
