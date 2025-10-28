@@ -21,7 +21,7 @@ class AuthnRequest2 extends RequestAbstractType
     $this->_id = Utils::generateUniqueID();
   }
 
-  public function buildStruct(?bool $forceAuthn = false, ?bool $isPassive = false, $setNameIdPolicy = true, $nameIdValueReq = null)
+  public function buildStruct(?bool $forceAuthn = false, ?bool $isPassive = false, ?bool $setNameIdPolicy = true, ?string $nameIdValueReq = null)
   {
     $root = $this->createElementNS('urn:oasis:names:tc:SAML:2.0:protocol', 'saml2p:AuthnRequest');
     $this->doc->appendChild($root);
@@ -39,12 +39,12 @@ class AuthnRequest2 extends RequestAbstractType
 
     if(isset($nameIdValueReq)) {
       $nameIDFormat = $this->_settings->getSPData()['NameIDFormat'];
-      $Subject = $this->createElementNS('urn:oasis:names:tc:SAML:2.0:assertion', 'samla:Subject');
+      $Subject = $this->createElementNS('urn:oasis:names:tc:SAML:2.0:assertion', 'saml2a:Subject');
       $root->appendChild($Subject);
-      $NameID = $this->createElementNS('urn:oasis:names:tc:SAML:2.0:assertion', 'samla:NameID', $nameIdValueReq);
+      $NameID = $this->createElementNS('urn:oasis:names:tc:SAML:2.0:assertion', 'saml2a:NameID', $nameIdValueReq);
       $Subject->appendChild($NameID);
       $NameID->setAttribute('Format', $nameIDFormat);
-      $SubjectConfirmation = $this->createElementNS('urn:oasis:names:tc:SAML:2.0:assertion', 'saml:SubjectConfirmation', '');
+      $SubjectConfirmation = $this->createElementNS('urn:oasis:names:tc:SAML:2.0:assertion', 'saml2a:SubjectConfirmation', '');
       $Subject->appendChild($SubjectConfirmation);
       $SubjectConfirmation->setAttribute('Method', 'urn:oasis:names:tc:SAML:2.0:cm:bearer');
     }
@@ -56,7 +56,7 @@ class AuthnRequest2 extends RequestAbstractType
         $nameIDFormat = Constants::NAMEID_ENCRYPTED;
       }
 
-      $NameIDPolicy = $this->createElementNS('urn:oasis:names:tc:SAML:2.0:assertion', 'samlp:NameIDPolicy');
+      $NameIDPolicy = $this->createElementNS('urn:oasis:names:tc:SAML:2.0:assertion', 'saml2a:NameIDPolicy');
       $root->appendChild($NameIDPolicy);
       $NameIDPolicy->setAttribute('Format', $nameIDFormat);
       $NameIDPolicy->setAttribute('AllowCreate', 'true');
