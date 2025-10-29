@@ -814,7 +814,7 @@ class XMLSecurityDSig
     if(empty($sigValue)) {
       throw new Exception("Unable to locate SignatureValue");
     }
-    return $objKey->verifySignature($this->signedInfo, base64_decode($sigValue));
+    return (int)$objKey->verifySignature($this->signedInfo, base64_decode($sigValue));
   }
 
   /**
