@@ -1360,6 +1360,7 @@ class Utils
         XMLSecurityKeyPhpseclib::RSA_1_5,
         XMLSecurityKeyPhpseclib::RSA_SHA1,
         XMLSecurityKeyPhpseclib::RSA_SHA256,
+        XMLSecurityKeyPhpseclib::RSA_SHA256_MGF1,
         XMLSecurityKeyPhpseclib::RSA_SHA384,
         XMLSecurityKeyPhpseclib::RSA_SHA512
       )
