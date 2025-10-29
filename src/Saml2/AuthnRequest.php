@@ -50,11 +50,11 @@ class AuthnRequest extends RequestAbstractType
    * @param bool $setNameIdPolicy When true the AuthNReuqest will set a nameIdPolicy
    * @param string $nameIdValueReq Indicates to the IdP the subject that should be authenticated
    */
-  public function __construct(Settings $settings, $forceAuthn = false, $isPassive = false, $setNameIdPolicy = true, $nameIdValueReq = null, ?string $id = null)
+  public function __construct(Settings $settings, $forceAuthn = false, $isPassive = false, $setNameIdPolicy = true, $nameIdValueReq = null)
   {
     parent::__construct("1.0", "UTF-8");
     $this->_settings = $settings;
-    $this->_id = $id ?? Utils::generateUniqueID();
+    $this->_id = Utils::generateUniqueID();
 
     $this->buildStruct($forceAuthn, $isPassive, $setNameIdPolicy, $nameIdValueReq);
     $this->_authnRequest = $this->getXML();
