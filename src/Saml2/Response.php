@@ -18,8 +18,8 @@ use Ermtraud\Saml2\XMLSecLibs\XMLSecEnc;
 use DOMDocument;
 use DOMNodeList;
 use DOMXPath;
+use Ermtraud\Saml2\XMLSecLibs\XMLSecurityKey;
 use Exception;
-use Ermtraud\Saml2\Crypto\XMLSecurityKeyPhpseclib;
 
 /**
  * SAML 2 Authentication Response
@@ -619,8 +619,8 @@ class Response
           Error::PRIVATE_KEY_NOT_FOUND
         );
       }
-      $seckey = new XMLSecurityKeyPhpseclib(XMLSecurityKeyPhpseclib::RSA_1_5, array('type' => 'private'));
-      $seckey->loadKeyFromString($pem);
+      $seckey = new XMLSecurityKey(XMLSecurityKey::RSA_1_5, array('type' => 'private'));
+      $seckey->loadKey($pem);
 
       $nameId = Utils::decryptElement($encryptedData, $seckey);
 

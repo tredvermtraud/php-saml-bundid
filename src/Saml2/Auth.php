@@ -13,7 +13,7 @@
 
 namespace Ermtraud\Saml2;
 
-use Ermtraud\Saml2\Crypto\XMLSecurityKeyPhpseclib;
+use Ermtraud\Saml2\XMLSecLibs\XMLSecurityKey;
 use Exception;
 
 /**
@@ -728,7 +728,7 @@ class Auth
    * @throws Exception
    * @throws Error
    */
-  public function buildRequestSignature($samlRequest, $relayState, $signAlgorithm = XMLSecurityKeyPhpseclib::RSA_SHA256)
+  public function buildRequestSignature($samlRequest, $relayState, $signAlgorithm = XMLSecurityKey::RSA_SHA256)
   {
     return $this->buildMessageSignature($samlRequest, $relayState, $signAlgorithm, "SAMLRequest");
   }
@@ -745,7 +745,7 @@ class Auth
    * @throws Exception
    * @throws Error
    */
-  public function buildResponseSignature($samlResponse, $relayState, $signAlgorithm = XMLSecurityKeyPhpseclib::RSA_SHA256)
+  public function buildResponseSignature($samlResponse, $relayState, $signAlgorithm = XMLSecurityKey::RSA_SHA256)
   {
     return $this->buildMessageSignature($samlResponse, $relayState, $signAlgorithm, "SAMLResponse");
   }
@@ -763,7 +763,7 @@ class Auth
    * @throws Exception
    * @throws Error
    */
-  private function buildMessageSignature($samlMessage, $relayState, $signAlgorithm = XMLSecurityKeyPhpseclib::RSA_SHA256, $type = "SAMLRequest")
+  private function buildMessageSignature($samlMessage, $relayState, $signAlgorithm = XMLSecurityKey::RSA_SHA256, $type = "SAMLRequest")
   {
     $key = $this->_settings->getSPkey();
     if(empty($key)) {
@@ -776,8 +776,8 @@ class Auth
       throw new Error($errorMsg, Error::PRIVATE_KEY_NOT_FOUND);
     }
 
-    $objKey = new XMLSecurityKeyPhpseclib($signAlgorithm, array_merge(array('type' => 'private'), $this->_settings->getSecurityData()['signingParameters'] ?? []));
-    $objKey->loadKeyFromString($key, false);
+    $objKey = new XMLSecurityKey($signAlgorithm, array_merge(array('type' => 'private'), $this->_settings->getSecurityData()['signingParameters'] ?? []));
+    $objKey->loadKey($key, false);
 
     $security = $this->_settings->getSecurityData();
     if($security['lowercaseUrlencoding']) {

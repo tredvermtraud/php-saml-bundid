@@ -3,6 +3,11 @@ namespace Ermtraud\Saml2\XMLSecLibs;
 
 use DOMElement;
 use Exception;
+use phpseclib3\Crypt\Common\PrivateKey;
+use phpseclib3\Crypt\Common\PublicKey;
+use phpseclib3\Crypt\PublicKeyLoader;
+use phpseclib3\Crypt\RSA;
+
 
 /**
  * xmlseclibs.php
@@ -64,6 +69,9 @@ class XMLSecurityKey
   public const string RSA_SHA256_MGF1 = 'http://www.w3.org/2007/05/xmldsig-more#sha256-rsa-MGF1';
   public const string HMAC_SHA1 = 'http://www.w3.org/2000/09/xmldsig#hmac-sha1';
   public const int AUTHTAG_LENGTH = 16;
+
+  /** @var PrivateKey|PublicKey|null */
+  private $phpseclibKey = null;
 
   /** @var array */
   private $cryptParams = array();
@@ -255,12 +263,12 @@ class XMLSecurityKey
         }
         throw new Exception('Certificate "type" (private/public) must be passed via parameters');
       case (self::RSA_SHA256_MGF1):
-        $this->cryptParams['library'] = 'openssl';
-        $this->cryptParams['method'] = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256';
-        $this->cryptParams['padding'] = OPENSSL_PKCS1_PADDING;
-        $this->cryptParams['digest'] = 'SHA256';
+        $this->cryptParams['library'] = 'phpseclib'; // use phpseclib for RSA-PSS
+        $this->cryptParams['method'] = self::RSA_SHA256_MGF1;
+        $this->cryptParams['digest'] = 'sha256';
+        $this->cryptParams['pss'] = true; // custom key
         if(is_array($params) && !empty($params['type'])) {
-          if($params['type'] == 'public' || $params['type'] == 'private') {
+          if($params['type'] === 'public' || $params['type'] === 'private') {
             $this->cryptParams['type'] = $params['type'];
             break;
           }
@@ -378,7 +386,7 @@ class XMLSecurityKey
     } else {
       $this->x509Certificate = null;
     }
-    if($this->cryptParams['library'] == 'openssl') {
+    if($this->cryptParams['library'] === 'openssl') {
       switch($this->cryptParams['type']) {
         case 'public':
           if($isCert) {
@@ -404,7 +412,17 @@ class XMLSecurityKey
         default:
           throw new Exception('Unknown type');
       }
+    } elseif($this->cryptParams['library'] === 'phpseclib') {
+      // Load the key using phpseclib
+      $this->phpseclibKey = PublicKeyLoader::load($this->key);
+      if($this->cryptParams['type'] === null) {
+        $this->cryptParams['type'] = strpos($this->key, 'PRIVATE') !== false ? 'private' : 'public';
+      }
+      if($this->cryptParams['type'] === 'private' && !($this->phpseclibKey instanceof PrivateKey)) {
+        throw new Exception("Expected private key for signing but got public key");
+      }
     }
+
   }
 
   /**
@@ -575,6 +593,25 @@ class XMLSecurityKey
     return $signature;
   }
 
+  private function signPhpseclib(string $data): string
+  {
+    if($this->phpseclibKey === null) {
+      throw new \RuntimeException("phpseclib key not loaded");
+    }
+
+    if(!($this->phpseclibKey instanceof PrivateKey)) {
+      throw new \RuntimeException("Provided key is not a private key");
+    }
+
+    $key = $this->phpseclibKey
+      ->withPadding(RSA::SIGNATURE_PSS)
+      ->withHash($this->cryptParams['digest'] ?? 'sha256')
+      ->withMGFHash($this->cryptParams['digest'] ?? 'sha256')
+      ->withSaltLength(32);
+
+    return $key->sign($data);
+  }
+
   /**
    * Verifies the given data (string) belonging to the given signature using the openssl-extension
    *
@@ -598,6 +635,21 @@ class XMLSecurityKey
       $algo = $this->cryptParams['digest'];
     }
     return openssl_verify($data, $signature, $this->key, $algo);
+  }
+
+  private function verifyPhpseclib(string $data, string $signature): bool
+  {
+    if($this->phpseclibKey === null) {
+      throw new \RuntimeException("phpseclib key not loaded");
+    }
+
+    $pub = $this->phpseclibKey
+      ->withPadding(RSA::SIGNATURE_PSS)
+      ->withHash($this->cryptParams['digest'] ?? 'sha256')
+      ->withMGFHash($this->cryptParams['digest'] ?? 'sha256')
+      ->withSaltLength(32);
+
+    return $pub->verify($data, $signature);
   }
 
   /**
@@ -647,6 +699,7 @@ class XMLSecurityKey
     return match ($this->cryptParams['library']) {
       'openssl' => $this->signOpenSSL($data),
       (self::HMAC_SHA1) => hash_hmac("sha1", $data, $this->key, true),
+      'phpseclib' => $this->signPhpseclib($data),
     };
   }
 
@@ -671,6 +724,7 @@ class XMLSecurityKey
     return match ($this->cryptParams['library']) {
       'openssl' => $this->verifyOpenSSL($data, $signature),
       (self::HMAC_SHA1) => strcmp($signature, hash_hmac("sha1", $data, $this->key, true)) == 0,
+      'phpseclib' => $this->verifyPhpseclib($data, $signature),
     };
   }
 

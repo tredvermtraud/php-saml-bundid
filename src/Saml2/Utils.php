@@ -21,8 +21,8 @@ use DOMElement;
 use DOMNodeList;
 use DomNode;
 use DOMXPath;
+use Ermtraud\Saml2\XMLSecLibs\XMLSecurityKey;
 use Exception;
-use Ermtraud\Saml2\Crypto\XMLSecurityKeyPhpseclib;
 
 /**
  * Utils of SAML PHP Toolkit
@@ -1093,7 +1093,7 @@ class Utils
    *
    * @throws Exception
    */
-  public static function generateNameId($value, $spnq, $format = null, $cert = null, $nq = null, $encAlg = XMLSecurityKeyPhpseclib::AES128_CBC)
+  public static function generateNameId($value, $spnq, $format = null, $cert = null, $nq = null, $encAlg = XMLSecurityKey::AES128_CBC)
   {
 
     $doc = new DOMDocument();
@@ -1113,18 +1113,18 @@ class Utils
     $doc->appendChild($nameId);
 
     if(!empty($cert)) {
-      if($encAlg == XMLSecurityKeyPhpseclib::AES128_CBC) {
-        $seckey = new XMLSecurityKeyPhpseclib(XMLSecurityKeyPhpseclib::RSA_1_5, array('type' => 'public'));
+      if($encAlg == XMLSecurityKey::AES128_CBC) {
+        $seckey = new XMLSecurityKey(XMLSecurityKey::RSA_1_5, array('type' => 'public'));
       } else {
-        $seckey = new XMLSecurityKeyPhpseclib(XMLSecurityKeyPhpseclib::RSA_OAEP_MGF1P, array('type' => 'public'));
+        $seckey = new XMLSecurityKey(XMLSecurityKey::RSA_OAEP_MGF1P, array('type' => 'public'));
       }
-      $seckey->loadKeyFromString($cert);
+      $seckey->loadKey($cert);
 
       $enc = new XMLSecEnc();
       $enc->setNode($nameId);
       $enc->type = XMLSecEnc::Element;
 
-      $symmetricKey = new XMLSecurityKeyPhpseclib($encAlg);
+      $symmetricKey = new XMLSecurityKey($encAlg);
       $symmetricKey->generateSessionKey();
       $enc->encryptKey($seckey, $symmetricKey);
 
@@ -1195,14 +1195,14 @@ class Utils
    * Decrypts an encrypted element.
    *
    * @param DOMElement     $encryptedData The encrypted data.
-   * @param XMLSecurityKeyPhpseclib $inputKey      The decryption key.
+   * @param XMLSecurityKey $inputKey      The decryption key.
    * @param bool           $formatOutput  Format or not the output.
    *
    * @return DOMElement  The decrypted element.
    *
    * @throws ValidationError
    */
-  public static function decryptElement(DOMElement $encryptedData, XMLSecurityKeyPhpseclib $inputKey, $formatOutput = true)
+  public static function decryptElement(DOMElement $encryptedData, XMLSecurityKey $inputKey, $formatOutput = true)
   {
 
     $enc = new XMLSecEnc();
@@ -1230,8 +1230,8 @@ class Utils
     if($symmetricKeyInfo->isEncrypted) {
       $symKeyInfoAlgo = $symmetricKeyInfo->getAlgorithm();
 
-      if($symKeyInfoAlgo === XMLSecurityKeyPhpseclib::RSA_OAEP_MGF1P && $inputKeyAlgo === XMLSecurityKeyPhpseclib::RSA_1_5) {
-        $inputKeyAlgo = XMLSecurityKeyPhpseclib::RSA_OAEP_MGF1P;
+      if($symKeyInfoAlgo === XMLSecurityKey::RSA_OAEP_MGF1P && $inputKeyAlgo === XMLSecurityKey::RSA_1_5) {
+        $inputKeyAlgo = XMLSecurityKey::RSA_OAEP_MGF1P;
       }
 
       if($inputKeyAlgo !== $symKeyInfoAlgo) {
@@ -1311,23 +1311,23 @@ class Utils
   }
 
   /**
-   * Converts a XMLSecurityKeyPhpseclib to the correct algorithm.
+   * Converts a XMLSecurityKey to the correct algorithm.
    *
-   * @param XMLSecurityKeyPhpseclib $key       The key.
+   * @param XMLSecurityKey $key       The key.
    * @param string         $algorithm The desired algorithm.
    * @param string         $type      Public or private key, defaults to public.
    *
-   * @return XMLSecurityKeyPhpseclib The new key.
+   * @return XMLSecurityKey The new key.
    *
    * @throws Exception
    */
-  public static function castKey(XMLSecurityKeyPhpseclib $key, $algorithm, $type = 'public')
+  public static function castKey(XMLSecurityKey $key, $algorithm, $type = 'public')
   {
     assert(is_string($algorithm));
     assert($type === 'public' || $type === 'private');
 
     // do nothing if algorithm is already the type of the key
-    if($key->algorithm === $algorithm) {
+    if($key->getAlgorithm() === $algorithm) {
       return $key;
     }
 
@@ -1337,13 +1337,13 @@ class Utils
 
     $keyInfo = openssl_pkey_get_details($key->key);
     if($keyInfo === false) {
-      throw new Exception('Unable to get key details from XMLSecurityKeyPhpseclib.');
+      throw new Exception('Unable to get key details from XMLSecurityKey.');
     }
     if(!isset($keyInfo['key'])) {
       throw new Exception('Missing key in public key details.');
     }
-    $newKey = new XMLSecurityKeyPhpseclib($algorithm, array('type' => $type));
-    $newKey->loadKeyFromString($keyInfo['key']);
+    $newKey = new XMLSecurityKey($algorithm, array('type' => $type));
+    $newKey->loadKey($keyInfo['key']);
     return $newKey;
   }
 
@@ -1357,12 +1357,12 @@ class Utils
     return in_array(
       $algorithm,
       array(
-        XMLSecurityKeyPhpseclib::RSA_1_5,
-        XMLSecurityKeyPhpseclib::RSA_SHA1,
-        XMLSecurityKeyPhpseclib::RSA_SHA256,
-        XMLSecurityKeyPhpseclib::RSA_SHA256_MGF1,
-        XMLSecurityKeyPhpseclib::RSA_SHA384,
-        XMLSecurityKeyPhpseclib::RSA_SHA512
+        XMLSecurityKey::RSA_1_5,
+        XMLSecurityKey::RSA_SHA1,
+        XMLSecurityKey::RSA_SHA256,
+        XMLSecurityKey::RSA_SHA256_MGF1,
+        XMLSecurityKey::RSA_SHA384,
+        XMLSecurityKey::RSA_SHA512
       )
     );
   }
@@ -1380,7 +1380,7 @@ class Utils
    *
    * @throws Exception
    */
-  public static function addSign($xml, $key, $cert, $signAlgorithm = XMLSecurityKeyPhpseclib::RSA_SHA256, $digestAlgorithm = XMLSecurityDSig::SHA256)
+  public static function addSign($xml, $key, $cert, $signAlgorithm = XMLSecurityKey::RSA_SHA256, $digestAlgorithm = XMLSecurityDSig::SHA256)
   {
     if($xml instanceof DOMDocument) {
       $dom = $xml;
@@ -1393,8 +1393,8 @@ class Utils
     }
 
     /* Load the private key. */
-    $objKey = new XMLSecurityKeyPhpseclib($signAlgorithm, array('type' => 'private'));
-    $objKey->loadKeyFromString($key, false);
+    $objKey = new XMLSecurityKey($signAlgorithm, array('type' => 'private'));
+    $objKey->loadKey($key, false);
 
     /* Get the EntityDescriptor node we should sign. */
     $rootNode = $dom->firstChild;
@@ -1544,7 +1544,7 @@ class Utils
   public static function validateBinarySign($messageType, $getData, $idpData, $retrieveParametersFromServer = false)
   {
     if(!isset($getData['SigAlg'])) {
-      $signAlg = XMLSecurityKeyPhpseclib::RSA_SHA1;
+      $signAlg = XMLSecurityKey::RSA_SHA1;
     } else {
       $signAlg = $getData['SigAlg'];
     }
@@ -1614,10 +1614,10 @@ class Utils
 
     $signatureValid = false;
     foreach($multiCerts as $cert) {
-      $objKey = new XMLSecurityKeyPhpseclib(XMLSecurityKeyPhpseclib::RSA_SHA1, array('type' => 'public'));
-      $objKey->loadKeyFromString($cert, true);
+      $objKey = new XMLSecurityKey(XMLSecurityKey::RSA_SHA1, array('type' => 'public'));
+      $objKey->loadKey($cert, true);
 
-      if($signAlg != XMLSecurityKeyPhpseclib::RSA_SHA1) {
+      if($signAlg != XMLSecurityKey::RSA_SHA1) {
         try {
           $objKey = Utils::castKey($objKey, $signAlg, 'public');
         } catch (Exception $e) {

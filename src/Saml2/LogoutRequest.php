@@ -13,7 +13,7 @@
 namespace Ermtraud\Saml2;
 
 use DOMDocument;
-use Ermtraud\Saml2\Crypto\XMLSecurityKeyPhpseclib;
+use Ermtraud\Saml2\XMLSecLibs\XMLSecurityKey;
 use Exception;
 
 /**
@@ -239,8 +239,8 @@ LOGOUTREQUEST;
         );
       }
 
-      $seckey = new XMLSecurityKeyPhpseclib(XMLSecurityKeyPhpseclib::RSA_1_5, array('type' => 'private'));
-      $seckey->loadKeyFromString($key);
+      $seckey = new XMLSecurityKey(XMLSecurityKey::RSA_1_5, array('type' => 'private'));
+      $seckey->loadKey($key);
 
       $nameId = Utils::decryptElement($encryptedData, $seckey);
 
