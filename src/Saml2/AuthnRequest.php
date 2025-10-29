@@ -28,13 +28,6 @@ class AuthnRequest extends RequestAbstractType
   protected $_settings;
 
   /**
-   * SAML AuthNRequest string
-   *
-   * @var string
-   */
-  private $_authnRequest;
-
-  /**
    * SAML AuthNRequest ID.
    *
    * @var string
@@ -57,7 +50,6 @@ class AuthnRequest extends RequestAbstractType
     $this->_id = Utils::generateUniqueID();
 
     $this->buildStruct($forceAuthn, $isPassive, $setNameIdPolicy, $nameIdValueReq);
-    $this->_authnRequest = $this->getXML();
   }
 
   /**
@@ -69,14 +61,14 @@ class AuthnRequest extends RequestAbstractType
    */
   public function getRequest($deflate = null)
   {
-    $subject = $this->_authnRequest;
+    $subject = $this->getXML();
 
     if(is_null($deflate)) {
       $deflate = $this->_settings->shouldCompressRequests();
     }
 
     if($deflate) {
-      $subject = gzdeflate($this->_authnRequest);
+      $subject = gzdeflate($this->getXML());
     }
 
     $base64Request = base64_encode($subject);
@@ -93,15 +85,6 @@ class AuthnRequest extends RequestAbstractType
     return $this->_id;
   }
 
-  /**
-   * Returns the XML that will be sent as part of the request
-   *
-   * @return string
-   */
-  public function getXML()
-  {
-    return $this->_authnRequest;
-  }
   public function buildStruct(?bool $forceAuthn = false, ?bool $isPassive = false, ?bool $setNameIdPolicy = true, ?string $nameIdValueReq = null)
   {
     $root = $this->createElementNS('urn:oasis:names:tc:SAML:2.0:protocol', 'saml2p:AuthnRequest');
